@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0f1220">
+  <title>suburbia syndicate — idle tycoon</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="money" id="moneyLine">$0 <span class="pill stat" id="rate">+0/s</span> <span class="pill" id="prestigePill">prestige x1.00</span></div>
+      <div class="tiny soft" id="tickInfo">idle running, autosave on</div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="run">run</button>
+      <button class="tab" data-tab="ops">ops</button>
+      <button class="tab" data-tab="shop">shop</button>
+      <button class="tab" data-tab="rebirth">rebirth</button>
+      <button class="tab" data-tab="settings">settings</button>
+    </nav>
+
+    <main>
+      <section class="view active" id="view-run">
+        <div class="panel">
+          <h3 class="title">tap to hustle</h3>
+          <div class="soft tiny" style="margin-bottom:8px">cartoon contraband only, keep it goofy</div>
+          <button id="tapBtn">cook a batch +$<span id="tapGain">1</span></button>
+          <div class="grid" style="margin-top:10px">
+            <div class="soft tiny">batch size</div><div class="stat" id="tapStat">1</div>
+            <div class="soft tiny">multis</div><div class="stat" id="tapMulti">x1</div>
+            <div class="soft tiny">global bonus</div><div class="stat" id="globalMulti">x1.00</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-ops">
+        <div class="panel">
+          <h3 class="title">operations</h3>
+          <div id="generators" class="grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-shop">
+        <div class="panel">
+          <h3 class="title">lab upgrades</h3>
+          <div id="upgrades" class="grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-rebirth">
+        <div class="panel">
+          <h3 class="title">rebirth: witness protection</h3>
+          <div class="tiny soft">cash out for <b>street cred</b> that boosts everything, unlocks rebirth upgrades</div>
+          <div class="grid" style="margin-top:6px">
+            <div class="soft tiny">you’ll get</div><div class="stat" id="willGainCred">0 cred</div>
+            <div class="soft tiny">current cred</div><div class="stat" id="credStat">0</div>
+            <div class="soft tiny">global boost</div><div class="stat" id="prestigeBoost">x1.00</div>
+          </div>
+          <button class="btn-gold" id="prestigeBtn" disabled>enter witness protection, restart</button>
+          <div class="sep"></div>
+          <div id="prestigeUpgrades" class="grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-settings">
+        <div class="panel">
+          <h3 class="title">settings & saves</h3>
+          <div class="grid">
+            <div><button class="btn-alt" id="saveBtn">save</button></div>
+            <div><button class="btn-alt" id="exportBtn">export save</button></div>
+            <div><button class="btn-alt" id="importBtn">import save</button></div>
+            <div><button class="btn-alt" id="wipeBtn">full reset</button></div>
+          </div>
+          <div id="importArea" style="display:none;margin-top:8px">
+            <textarea id="importText" class="input tiny" rows="3" placeholder="paste your save json then press import again"></textarea>
+          </div>
+          <div class="sep"></div>
+          <div class="tiny soft">pwa installed? add to home screen for fullscreen + offline</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="row">
+      <div class="soft tiny">autosaves every 15s, idle earnings on return</div>
+      <div class="tiny nowrap" id="ver">v1.1 pwa</div>
+    </div>
+  </footer>
+
+  <script src="game.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+      });
+    }
+    document.querySelectorAll('.tab').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+        btn.classList.add('active');
+        const id = 'view-' + btn.dataset.tab;
+        document.getElementById(id).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
